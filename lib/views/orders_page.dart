@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/container/additional_confirm.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/orders_model.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -77,7 +79,20 @@ class _OrdersPageState extends State<OrdersPage> {
                 OrdersModel.fromJsonList(snapshot.data!.docs)
                     as List<OrdersModel>;
             if (orders.isEmpty) {
-              return Center(child: Text("No orders found"));
+              return EmptyStateWidget(
+                icon: Icons.shopping_bag_outlined,
+                title: "No Orders Yet",
+                subtitle: "You haven't placed any orders yet. Start shopping to see your orders here!",
+                buttonText: "Start Shopping",
+                onButtonPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    "/home",
+                    (route) => false,
+                  );
+                },
+                iconColor: Colors.blue,
+              );
             } else {
               return ListView.builder(
                 itemCount: orders.length,
@@ -102,7 +117,7 @@ class _OrdersPageState extends State<OrdersPage> {
               );
             }
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: ModernLoader());
           }
         },
       ),

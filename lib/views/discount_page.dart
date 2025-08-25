@@ -1,5 +1,7 @@
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/coupon_model.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
 
 class DiscountPage extends StatefulWidget {
@@ -30,7 +32,12 @@ class _DiscountPageState extends State<DiscountPage> {
                     as List<CouponModel>;
 
             if (discounts.isEmpty) {
-              return SizedBox();
+              return EmptyStateWidget(
+                icon: Icons.local_offer_outlined,
+                title: "No Coupons Available",
+                subtitle: "There are no discount coupons available at the moment. Check back later for great deals!",
+                iconColor: Colors.blue,
+              );
             } else {
               return ListView.builder(
                 itemCount: discounts.length,
@@ -44,7 +51,7 @@ class _DiscountPageState extends State<DiscountPage> {
               );
             }
           } else {
-            return SizedBox();
+            return const Center(child: ModernLoader());
           }
         },
       ),

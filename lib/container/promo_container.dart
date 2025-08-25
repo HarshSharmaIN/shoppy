@@ -22,7 +22,7 @@ class _PromoContainerState extends State<PromoContainer> {
               PromoBannersModel.fromJsonList(snapshot.data!.docs)
                   as List<PromoBannersModel>;
           if (promos.isEmpty) {
-            return SizedBox();
+            return const SizedBox.shrink();
           } else {
             return CarouselSlider(
               items: promos
@@ -70,15 +70,7 @@ class _PromoContainerState extends State<PromoContainer> {
             );
           }
         } else {
-          return Container(
-            height: 200,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const ModernLoader(),
-          );
+          return const Center(child: ModernLoader());
         }
       },
     );

@@ -3,8 +3,8 @@ import 'package:ecommerce_app/container/zone_container.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/categories_model.dart';
 import 'package:ecommerce_app/models/promo_banners_model.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomePageMakerContainer extends StatefulWidget {
   const HomePageMakerContainer({super.key});
@@ -30,7 +30,7 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
               CategoriesModel.fromJsonList(snapshot.data!.docs)
                   as List<CategoriesModel>;
           if (categories.isEmpty) {
-            return SizedBox();
+            return const SizedBox.shrink();
           } else {
             return StreamBuilder(
               stream: DbService().readBanners(),
@@ -40,7 +40,7 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
                       PromoBannersModel.fromJsonList(snapshot.data!.docs)
                           as List<PromoBannersModel>;
                   if (banners.isEmpty) {
-                    return SizedBox();
+                    return const SizedBox.shrink();
                   } else {
                     return Column(
                       children: [
@@ -69,18 +69,13 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
                     );
                   }
                 } else {
-                  return SizedBox();
+                  return const Center(child: ModernLoader());
                 }
               },
             );
           }
         } else {
-          return Shimmer(
-            child: Container(height: 400, width: double.infinity),
-            gradient: LinearGradient(
-              colors: [Colors.grey.shade200, Colors.white],
-            ),
-          );
+          return const Center(child: ModernLoader());
         }
       },
     );

@@ -21,7 +21,7 @@ class _DiscountContainerState extends State<DiscountContainer> {
                   as List<CouponModel>;
 
           if (discounts.isEmpty) {
-            return SizedBox();
+            return const SizedBox.shrink();
           } else {
             return GestureDetector(
               onTap: () => Navigator.pushNamed(context, "/discount"),
@@ -96,7 +96,7 @@ class _DiscountContainerState extends State<DiscountContainer> {
             );
           }
         } else {
-          return SizedBox();
+          return const Center(child: ModernLoader());
         }
       },
     );

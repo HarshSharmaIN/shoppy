@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/container/cart_container.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/widgets/modern_button.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,42 +36,19 @@ class _CartPageState extends State<CartPage> {
             return const Center(child: ModernLoader());
           } else {
             if (value.carts.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(60),
-                      ),
-                      child: Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 60,
-                        color: Colors.grey.shade400,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      "Your cart is empty",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Add some items to get started",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade500,
-                      ),
-                    ),
-                  ],
-                ),
+              return EmptyStateWidget(
+                icon: Icons.shopping_cart_outlined,
+                title: "Your cart is empty",
+                subtitle: "Add some items to get started shopping!",
+                buttonText: "Start Shopping",
+                onButtonPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    "/home",
+                    (route) => false,
+                  );
+                },
+                iconColor: Colors.blue,
               );
             } else {
               if (value.products.isNotEmpty) {

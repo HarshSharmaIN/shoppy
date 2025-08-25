@@ -21,7 +21,7 @@ class _CategoryContainerState extends State<CategoryContainer> {
               CategoriesModel.fromJsonList(snapshot.data!.docs)
                   as List<CategoriesModel>;
           if (categories.isEmpty) {
-            return SizedBox();
+            return const SizedBox.shrink();
           } else {
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 8),
@@ -59,23 +59,7 @@ class _CategoryContainerState extends State<CategoryContainer> {
             );
           }
         } else {
-          return Container(
-            height: 120,
-            child: Row(
-              children: List.generate(
-                5,
-                (index) => Container(
-                  width: 80,
-                  height: 80,
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-              ),
-            ),
-          );
+          return const Center(child: ModernLoader());
         }
       },
     );

@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/constants/discount.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/products_model.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
 
 class SpecificProducts extends StatefulWidget {
@@ -31,7 +33,12 @@ class _SpecificProductsState extends State<SpecificProducts> {
                 ProductsModel.fromJsonList(snapshot.data!.docs)
                     as List<ProductsModel>;
             if (products.isEmpty) {
-              return Center(child: Text("No products found."));
+              return EmptyStateWidget(
+                icon: Icons.inventory_2_outlined,
+                title: "No Products Available",
+                subtitle: "We couldn't find any products in this category. Check back later!",
+                iconColor: Colors.orange,
+              );
             } else {
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -120,7 +127,7 @@ class _SpecificProductsState extends State<SpecificProducts> {
               );
             }
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: ModernLoader());
           }
         },
       ),

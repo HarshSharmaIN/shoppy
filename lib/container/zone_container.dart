@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ecommerce_app/constants/discount.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/products_model.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -33,7 +34,7 @@ class _ZoneContainerState extends State<ZoneContainer> {
               ProductsModel.fromJsonList(snapshot.data!.docs)
                   as List<ProductsModel>;
           if (products.isEmpty) {
-            return Center(child: Text("No Products Found"));
+            return const SizedBox.shrink();
           } else {
             return Container(
               margin: EdgeInsets.all(4),
@@ -132,16 +133,7 @@ class _ZoneContainerState extends State<ZoneContainer> {
             );
           }
         } else {
-          return Shimmer(
-            child: Container(
-              height: 400,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-            gradient: LinearGradient(
-              colors: [Colors.grey.shade200, Colors.white],
-            ),
-          );
+          return const Center(child: ModernLoader());
         }
       },
     );
