@@ -26,11 +26,36 @@ class _ViewProductState extends State<ViewProduct> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              arguments.image,
+            Container(
               height: 300,
               width: double.infinity,
-              fit: BoxFit.contain,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              margin: const EdgeInsets.all(16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(
+                  arguments.image,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey,
+                        size: 80,
+                      ),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

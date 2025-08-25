@@ -3,9 +3,8 @@ import 'dart:math';
 import 'package:ecommerce_app/constants/discount.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/products_model.dart';
-import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ZoneContainer extends StatefulWidget {
   final String category;
@@ -98,18 +97,39 @@ class _ZoneContainerState extends State<ZoneContainer> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Center(
-                                  child: Image.network(
-                                    products[i].image,
-                                    height: 120,
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Image.network(
+                                        products[i].image,
+                                        height: 100,
+                                        fit: BoxFit.contain,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(
+                                            Icons.image_not_supported,
+                                            color: Colors.grey,
+                                            size: 40,
+                                          );
+                                        },
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return const CircularProgressIndicator();
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
+                                const SizedBox(height: 8),
                                 Text(
                                   products[i].name,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

@@ -69,9 +69,28 @@ class _SpecificProductsState extends State<SpecificProducts> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    image: NetworkImage(product.image),
-                                    fit: BoxFit.fitHeight,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    product.image,
+                                    fit: BoxFit.contain,
+                                    width: double.infinity,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Center(
+                                        child: Icon(
+                                          Icons.image_not_supported,
+                                          color: Colors.grey,
+                                          size: 40,
+                                        ),
+                                      );
+                                    },
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),

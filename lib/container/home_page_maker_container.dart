@@ -37,18 +37,16 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
               builder: (context, bannerSnapshot) {
                 if (bannerSnapshot.hasData) {
                   List<PromoBannersModel> banners =
-                      PromoBannersModel.fromJsonList(snapshot.data!.docs)
+                      PromoBannersModel.fromJsonList(bannerSnapshot.data!.docs)
                           as List<PromoBannersModel>;
-                  if (banners.isEmpty) {
-                    return const SizedBox.shrink();
-                  } else {
+                  
                     return Column(
                       children: [
                         for (
                           int i = 0;
                           i <
                               minCalculator(
-                                snapshot.data!.docs.length,
+                                categories.length,
                                 bannerSnapshot.data!.docs.length,
                               );
                           i++
@@ -56,7 +54,7 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
                           Column(
                             children: [
                               ZoneContainer(
-                                category: snapshot.data!.docs[i]["name"],
+                                category: categories[i].name,
                               ),
                               BannerContainer(
                                 image: bannerSnapshot.data!.docs[i]["image"],
@@ -67,7 +65,6 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
                           ),
                       ],
                     );
-                  }
                 } else {
                   return const Center(child: ModernLoader());
                 }

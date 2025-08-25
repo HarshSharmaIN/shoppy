@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
           "/": (context) => SplashScreen(),
           "/intro": (context) => IntroScreen(),
           "/login": (context) => LoginPage(),
-          "/home": (context) => HomeNav(),
+          "/home": (context) => const HomeNav(),
           "/signup": (context) => SingupPage(),
           "/update_profile": (context) => UpdateProfile(),
           "/discount": (context) => DiscountPage(),
@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
           "/cart": (context) => CartPage(),
           "/checkout": (context) => CheckoutPage(),
           "/orders": (context) => OrdersPage(),
-          "/view_order": (context) => ViewOrder(),
+          "/view_order": (context) => const ViewOrder(),
         },
       ),
     );
