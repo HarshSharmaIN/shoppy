@@ -27,35 +27,97 @@ class _HomeNavState extends State<HomeNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        elevation: 20,
         currentIndex: selectedIndex,
         onTap: (value) {
           setState(() {
             selectedIndex = value;
           });
         },
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey.shade400,
         showSelectedLabels: true,
         showUnselectedLabels: true,
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 12,
+        ),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+                size: 24,
+              ),
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_shipping_outlined),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                selectedIndex == 1 ? Icons.local_shipping : Icons.local_shipping_outlined,
+                size: 24,
+              ),
+            ),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Consumer<CartProvider>(
               builder: (context, value, child) {
-                if (value.carts.length > 0) {
-                  return Badge(
-                    label: Text(value.carts.length.toString()),
-                    child: Icon(Icons.shopping_cart_outlined),
-                    backgroundColor: Colors.green.shade400,
+                return Container(
+                  padding: const EdgeInsets.all(8),
+                  child: value.carts.length > 0
+                      ? Badge(
+                          label: Text(
+                            value.carts.length.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          backgroundColor: Colors.red.shade500,
+                          child: Icon(
+                            selectedIndex == 2 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                            size: 24,
+                          ),
+                        )
+                      : Icon(
+                          selectedIndex == 2 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                          size: 24,
+                        ),
+                );
+              },
+            ),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                selectedIndex == 3 ? Icons.person : Icons.person_outline,
+                size: 24,
+              ),
+            ),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
                   );
                 }
                 return Icon(Icons.shopping_cart_outlined);

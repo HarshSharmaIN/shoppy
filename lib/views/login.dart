@@ -1,4 +1,7 @@
 import 'package:ecommerce_app/controllers/auth_service.dart';
+import 'package:ecommerce_app/utils/snackbar_utils.dart';
+import 'package:ecommerce_app/widgets/modern_button.dart';
+import 'package:ecommerce_app/widgets/modern_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,206 +15,264 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _obscurePassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              SizedBox(height: 120),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text("Get started with your account"),
-                    SizedBox(height: 10),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .9,
-                      child: TextFormField(
-                        validator: (value) =>
-                            value!.isEmpty ? "Email cannot be empty." : null,
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text("Email"),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .9,
-                child: TextFormField(
-                  validator: (value) => value!.length < 8
-                      ? "Password should have atleast 8 characters."
-                      : null,
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text("Password"),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return AlertDialog(
-                            title: Text("Forget Password"),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Enter you email"),
-                                SizedBox(height: 10),
-                                TextFormField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    label: Text("Email"),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  if (_emailController.text.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Email cannot be empty"),
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  await AuthService()
-                                      .resetPassword(_emailController.text)
-                                      .then((value) {
-                                        if (value == "Mail Sent") {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Password reset link sent to your email",
-                                              ),
-                                            ),
-                                          );
-                                          Navigator.pop(context);
-                                        } else {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                value,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              backgroundColor:
-                                                  Colors.red.shade400,
-                                            ),
-                                          );
-                                        }
-                                      });
-                                },
-                                child: Text("Submit"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Text("Forgot Password"),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                height: 60,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      AuthService()
-                          .loginWithEmail(
-                            _emailController.text,
-                            _passwordController.text,
-                          )
-                          .then((value) {
-                            if (value == "Login Successful") {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Login Successful")),
-                              );
-                              Navigator.restorablePushNamedAndRemoveUntil(
-                                context,
-                                "/home",
-                                (route) => false,
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    value,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  backgroundColor: Colors.red.shade400,
-                                ),
-                              );
-                            }
-                          });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text("Login", style: TextStyle(fontSize: 16)),
-                ),
-              ),
-
-              SizedBox(height: 10),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have and account?"),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/signup");
-                    },
-                    child: Text("Sign Up"),
-                  ),
-                ],
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.grey.shade50,
+              Colors.white,
             ],
           ),
         ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 40),
+                  
+                  // Header
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.shopping_bag,
+                            size: 40,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Text(
+                          "Welcome Back!",
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Sign in to continue shopping",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 48),
+                  
+                  // Email field
+                  ModernTextField(
+                    controller: _emailController,
+                    label: "Email",
+                    hint: "Enter your email address",
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Email cannot be empty";
+                      }
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        return "Please enter a valid email";
+                      }
+                      return null;
+                    },
+                  ),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // Password field
+                  ModernTextField(
+                    controller: _passwordController,
+                    label: "Password",
+                    hint: "Enter your password",
+                    prefixIcon: Icons.lock_outline,
+                    suffixIcon: _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    obscureText: _obscurePassword,
+                    onSuffixTap: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Password cannot be empty";
+                      }
+                      if (value.length < 8) {
+                        return "Password should have at least 8 characters";
+                      }
+                      return null;
+                    },
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Forgot password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => _showForgotPasswordDialog(),
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Login button
+                  ModernButton(
+                    text: "Sign In",
+                    onPressed: _login,
+                    isLoading: _isLoading,
+                    width: double.infinity,
+                    icon: Icons.login,
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Sign up link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 16,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, "/signup"),
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _login() async {
+    if (!formKey.currentState!.validate()) return;
+    
+    setState(() => _isLoading = true);
+    
+    try {
+      final result = await AuthService().loginWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+      
+      if (result == "Login Successful") {
+        SnackBarUtils.showSuccess(context, "Welcome back! Login successful");
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          "/home",
+          (route) => false,
+        );
+      } else {
+        SnackBarUtils.showError(context, result);
+      }
+    } catch (e) {
+      SnackBarUtils.showError(context, "An error occurred. Please try again.");
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showForgotPasswordDialog() {
+    final emailController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          "Reset Password",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Enter your email address to receive a password reset link."),
+            const SizedBox(height: 16),
+            ModernTextField(
+              controller: emailController,
+              label: "Email",
+              hint: "Enter your email",
+              prefixIcon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (emailController.text.isEmpty) {
+                SnackBarUtils.showError(context, "Email cannot be empty");
+                return;
+              }
+              
+              Navigator.pop(context);
+              
+              final result = await AuthService().resetPassword(emailController.text.trim());
+              if (result == "Mail Sent") {
+                SnackBarUtils.showSuccess(context, "Password reset link sent to your email");
+              } else {
+                SnackBarUtils.showError(context, result);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text("Send Link"),
+          ),
+        ],
       ),
     );
   }

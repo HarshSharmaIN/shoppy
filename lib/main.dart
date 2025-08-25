@@ -5,12 +5,13 @@ import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/views/cart_page.dart';
 import 'package:ecommerce_app/views/checkout_page.dart';
 import 'package:ecommerce_app/views/discount_page.dart';
-import 'package:ecommerce_app/views/home.dart';
 import 'package:ecommerce_app/views/home_nav.dart';
+import 'package:ecommerce_app/views/intro_screen.dart';
 import 'package:ecommerce_app/views/login.dart';
 import 'package:ecommerce_app/views/orders_page.dart';
 import 'package:ecommerce_app/views/signup.dart';
 import 'package:ecommerce_app/views/specific_products.dart';
+import 'package:ecommerce_app/views/splash_screen.dart';
 import 'package:ecommerce_app/views/update_profile.dart';
 import 'package:ecommerce_app/views/view_product.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,7 +67,8 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         routes: {
-          "/": (context) => CheckUser(),
+          "/": (context) => SplashScreen(),
+          "/intro": (context) => IntroScreen(),
           "/login": (context) => LoginPage(),
           "/home": (context) => HomeNav(),
           "/signup": (context) => SingupPage(),
@@ -81,31 +83,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class CheckUser extends StatefulWidget {
-  const CheckUser({super.key});
-
-  @override
-  State<CheckUser> createState() => _CheckUserState();
-}
-
-class _CheckUserState extends State<CheckUser> {
-  @override
-  void initState() {
-    AuthService().isLoggedIn().then((value) {
-      if (value) {
-        Navigator.pushReplacementNamed(context, "/home");
-      } else {
-        Navigator.pushReplacementNamed(context, "/login");
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

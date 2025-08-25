@@ -1,5 +1,7 @@
 import 'package:ecommerce_app/container/cart_container.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/widgets/modern_button.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,27 +16,68 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text(
           "Your Cart",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
-        scrolledUnderElevation: 0,
-        forceMaterialTransparency: true,
       ),
       body: Consumer<CartProvider>(
         builder: (context, value, child) {
           if (value.isLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: ModernLoader());
           } else {
             if (value.carts.isEmpty) {
-              return Center(child: Text("No items in cart"));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      child: Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 60,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Your cart is empty",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Add some items to get started",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             } else {
               if (value.products.isNotEmpty) {
                 return ListView.builder(
+                  padding: const EdgeInsets.all(16),
                   itemCount: value.carts.length,
                   itemBuilder: (context, index) {
-                    print("selected ${value.carts[index].quantity}");
                     return CartContainer(
                       image: value.products[index].image,
                       name: value.products[index].name,
@@ -47,7 +90,7 @@ class _CartPageState extends State<CartPage> {
                   },
                 );
               } else {
-                return Text("No items in cart");
+                return const Center(child: ModernLoader());
               }
             }
           }
@@ -59,27 +102,50 @@ class _CartPageState extends State<CartPage> {
             return SizedBox();
           } else {
             return Container(
-              width: double.infinity,
-              height: 60,
-              padding: EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Total : ₹${value.totalCost} ",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/checkout");
-                    },
-                    child: Text("Procced to Checkout"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                    ),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
                   ),
                 ],
+              ),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Total Amount",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Text(
+                          "₹${value.totalCost}",
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ModernButton(
+                      text: "Proceed to Checkout",
+                      onPressed: () => Navigator.pushNamed(context, "/checkout"),
+                      width: double.infinity,
+                      icon: Icons.arrow_forward,
+                    ),
+                  ],
+                ),
               ),
             );
           }
