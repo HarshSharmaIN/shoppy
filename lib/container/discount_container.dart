@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/coupon_model.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 
 class DiscountContainer extends StatefulWidget {
@@ -21,7 +22,15 @@ class _DiscountContainerState extends State<DiscountContainer> {
                   as List<CouponModel>;
 
           if (discounts.isEmpty) {
-            return const SizedBox.shrink();
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: EmptyStateWidget(
+                icon: Icons.local_offer_outlined,
+                title: "No Discount Coupons",
+                subtitle: "We're preparing amazing discounts for you. Check back soon!",
+                iconColor: Colors.green,
+              ),
+            );
           } else {
             return GestureDetector(
               onTap: () => Navigator.pushNamed(context, "/discount"),

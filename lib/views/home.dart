@@ -2,6 +2,7 @@ import 'package:ecommerce_app/container/category_container.dart';
 import 'package:ecommerce_app/container/discount_container.dart';
 import 'package:ecommerce_app/container/home_page_maker_container.dart';
 import 'package:ecommerce_app/container/promo_container.dart';
+import 'package:ecommerce_app/views/search_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,7 +38,10 @@ class _HomePageState extends State<HomePage> {
             ),
             child: IconButton(
               onPressed: () {
-                // Add search functionality
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage()),
+                );
               },
               icon: const Icon(
                 Icons.search,

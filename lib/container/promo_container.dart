@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/promo_banners_model.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 
 class PromoContainer extends StatefulWidget {
@@ -22,7 +23,15 @@ class _PromoContainerState extends State<PromoContainer> {
               PromoBannersModel.fromJsonList(snapshot.data!.docs)
                   as List<PromoBannersModel>;
           if (promos.isEmpty) {
-            return const SizedBox.shrink();
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: EmptyStateWidget(
+                icon: Icons.campaign_outlined,
+                title: "No Promotions Available",
+                subtitle: "Check back later for exciting offers and deals!",
+                iconColor: Colors.purple,
+              ),
+            );
           } else {
             return CarouselSlider(
               items: promos

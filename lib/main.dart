@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
           "/checkout": (context) => CheckoutPage(),
           "/orders": (context) => OrdersPage(),
           "/view_order": (context) => const ViewOrder(),
+          "/search": (context) => SearchPage(),
         },
       ),
     );

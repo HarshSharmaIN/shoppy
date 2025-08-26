@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/categories_model.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
+import 'package:ecommerce_app/widgets/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 
 class CategoryContainer extends StatefulWidget {
@@ -21,7 +22,15 @@ class _CategoryContainerState extends State<CategoryContainer> {
               CategoriesModel.fromJsonList(snapshot.data!.docs)
                   as List<CategoriesModel>;
           if (categories.isEmpty) {
-            return const SizedBox.shrink();
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: EmptyStateWidget(
+                icon: Icons.category_outlined,
+                title: "No Categories Available",
+                subtitle: "We're working on adding product categories. Stay tuned!",
+                iconColor: Colors.indigo,
+              ),
+            );
           } else {
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 8),

@@ -13,6 +13,7 @@ class ModernTextField extends StatefulWidget {
   final int maxLines;
   final bool readOnly;
   final TextCapitalization textCapitalization;
+  final Function(String)? onChanged;
 
   const ModernTextField({
     super.key,
@@ -28,6 +29,7 @@ class ModernTextField extends StatefulWidget {
     this.maxLines = 1,
     this.readOnly = false,
     this.textCapitalization = TextCapitalization.none,
+    this.onChanged,
   });
 
   @override
@@ -60,6 +62,7 @@ class _ModernTextFieldState extends State<ModernTextField> {
         textCapitalization: widget.textCapitalization,
         onTap: () => setState(() => _isFocused = true),
         onFieldSubmitted: (_) => setState(() => _isFocused = false),
+        onChanged: widget.onChanged,
         decoration: InputDecoration(
           labelText: widget.label,
           hintText: widget.hint,
