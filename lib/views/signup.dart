@@ -22,7 +22,8 @@ class _SingupPageState extends State<SingupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SafeArea(
+        child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -33,8 +34,7 @@ class _SingupPageState extends State<SingupPage> {
             ],
           ),
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Form(
               key: formKey,
@@ -187,7 +187,6 @@ class _SingupPageState extends State<SingupPage> {
               ),
             ),
           ),
-        ),
       ),
     );
   }

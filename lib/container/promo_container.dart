@@ -3,6 +3,7 @@ import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/promo_banners_model.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PromoContainer extends StatefulWidget {
@@ -58,10 +59,26 @@ class _PromoContainerState extends State<PromoContainer> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
+                          child: CachedNetworkImage(
                             promo.image,
                             fit: BoxFit.cover,
                             width: double.infinity,
+                            placeholder: (context, url) => Container(
+                              color: Colors.grey.shade200,
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey.shade200,
+                              child: const Center(
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.grey,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

@@ -4,6 +4,7 @@ import 'package:ecommerce_app/widgets/empty_state_widget.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:ecommerce_app/widgets/modern_text_field.dart';
 import 'package:ecommerce_app/constants/discount.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -27,18 +28,29 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _loadAllProducts() async {
-    // Load products from all categories
-    final categories = ['electronics', 'clothing', 'books', 'home', 'sports'];
+    setState(() {
+      _isLoading = true;
+    });
+    
     List<ProductsModel> allProducts = [];
     
-    for (String category in categories) {
-      try {
-        final snapshot = await DbService().readProducts(category).first;
-        final products = ProductsModel.fromJsonList(snapshot.docs);
-        allProducts.addAll(products);
-      } catch (e) {
-        print('Error loading products from $category: $e');
+    try {
+      // Get all categories first
+      final categoriesSnapshot = await DbService().readCategories().first;
+      final categories = categoriesSnapshot.docs.map((doc) => doc['name'] as String).toList();
+      
+      // Load products from all categories
+      for (String category in categories) {
+        try {
+          final snapshot = await DbService().readProducts(category).first;
+          final products = ProductsModel.fromJsonList(snapshot.docs);
+          allProducts.addAll(products);
+        } catch (e) {
+          print('Error loading products from $category: $e');
+        }
       }
+    } catch (e) {
+      print('Error loading categories: $e');
     }
     
     setState(() {
@@ -156,25 +168,20 @@ class _SearchPageState extends State<SearchPage> {
                                             ),
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(12),
-                                              child: Image.network(
+                                              child: CachedNetworkImage(
                                                 product.image,
                                                 fit: BoxFit.contain,
                                                 width: double.infinity,
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  return const Center(
-                                                    child: Icon(
-                                                      Icons.image_not_supported,
-                                                      color: Colors.grey,
-                                                      size: 40,
-                                                    ),
-                                                  );
-                                                },
-                                                loadingBuilder: (context, child, loadingProgress) {
-                                                  if (loadingProgress == null) return child;
-                                                  return const Center(
-                                                    child: CircularProgressIndicator(),
-                                                  );
-                                                },
+                                                placeholder: (context, url) => const Center(
+                                                  child: CircularProgressIndicator(),
+                                                ),
+                                                errorWidget: (context, url, error) => const Center(
+                                                  child: Icon(
+                                                    Icons.image_not_supported,
+                                                    color: Colors.grey,
+                                                    size: 40,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),

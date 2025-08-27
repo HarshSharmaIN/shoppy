@@ -4,6 +4,7 @@ import 'package:ecommerce_app/constants/discount.dart';
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/products_model.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ZoneContainer extends StatefulWidget {
@@ -104,21 +105,16 @@ class _ZoneContainerState extends State<ZoneContainer> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Center(
-                                      child: Image.network(
+                                      child: CachedNetworkImage(
                                         products[i].image,
                                         height: 100,
                                         fit: BoxFit.contain,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return const Icon(
+                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(
                                             Icons.image_not_supported,
                                             color: Colors.grey,
                                             size: 40,
-                                          );
-                                        },
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) return child;
-                                          return const CircularProgressIndicator();
-                                        },
+                                        ),
                                       ),
                                     ),
                                   ),

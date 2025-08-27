@@ -79,9 +79,19 @@
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
+                      child: CachedNetworkImage(
                         widget.image,
                         fit: BoxFit.cover,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) => const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey,
+                            size: 40,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -287,5 +297,6 @@
           ),
         ),
       );
+import 'package:cached_network_image/cached_network_image.dart';
     }
   }

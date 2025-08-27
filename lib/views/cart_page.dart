@@ -18,61 +18,72 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom App Bar
+            Container(
         backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          "Your Cart",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Your Cart",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            // Body Content
+            Expanded(
+              child: Consumer<CartProvider>(
+                builder: (context, value, child) {
+                  if (value.isLoading) {
+                    return const Center(child: ModernLoader());
+                  } else {
+                    if (value.carts.isEmpty) {
+                      return EmptyStateWidget(
+                        icon: Icons.shopping_cart_outlined,
+                        title: "Your cart is empty",
+                        subtitle: "Add some items to get started shopping!",
+                        buttonText: "Start Shopping",
+                        onButtonPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            "/home",
+                            (route) => false,
+                          );
+                        },
+                        iconColor: Colors.blue,
+                      );
+                    } else {
+                      if (value.products.isNotEmpty) {
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: value.carts.length,
+                          itemBuilder: (context, index) {
+                            return CartContainer(
+                              image: value.products[index].image,
+                              name: value.products[index].name,
+                              new_price: value.products[index].new_price,
+                              old_price: value.products[index].old_price,
+                              maxQuantity: value.products[index].maxQuantity,
+                              selectedQuantity: value.carts[index].quantity,
+                              productId: value.products[index].id,
+                            );
+                          },
+                        );
+                      } else {
+                        return const Center(child: ModernLoader());
+                      }
+                    }
+                  }
+                },
+              ),
+            ),
+          ],
           ),
         ),
-      ),
-      body: Consumer<CartProvider>(
-        builder: (context, value, child) {
-          if (value.isLoading) {
-            return const Center(child: ModernLoader());
-          } else {
-            if (value.carts.isEmpty) {
-              return EmptyStateWidget(
-                icon: Icons.shopping_cart_outlined,
-                title: "Your cart is empty",
-                subtitle: "Add some items to get started shopping!",
-                buttonText: "Start Shopping",
-                onButtonPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    "/home",
-                    (route) => false,
-                  );
-                },
-                iconColor: Colors.blue,
-              );
-            } else {
-              if (value.products.isNotEmpty) {
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: value.carts.length,
-                  itemBuilder: (context, index) {
-                    return CartContainer(
-                      image: value.products[index].image,
-                      name: value.products[index].name,
-                      new_price: value.products[index].new_price,
-                      old_price: value.products[index].old_price,
-                      maxQuantity: value.products[index].maxQuantity,
-                      selectedQuantity: value.carts[index].quantity,
-                      productId: value.products[index].id,
-                    );
-                  },
-                );
-              } else {
-                return const Center(child: ModernLoader());
-              }
-            }
-          }
-        },
       ),
       bottomNavigationBar: Consumer<CartProvider>(
         builder: (context, value, child) {

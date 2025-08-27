@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BannerContainer extends StatefulWidget {
@@ -38,12 +39,17 @@ class _BannerContainerState extends State<BannerContainer> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: Image.network(
+          child: CachedNetworkImage(
             widget.image, 
             fit: BoxFit.cover,
             width: double.infinity,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
+            placeholder: (context, url) => Container(
+              color: Colors.grey.shade200,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            errorWidget: (context, url, error) => Container(
                 color: Colors.grey.shade200,
                 child: const Center(
                   child: Icon(
@@ -52,17 +58,7 @@ class _BannerContainerState extends State<BannerContainer> {
                     size: 50,
                   ),
                 ),
-              );
-            },
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                color: Colors.grey.shade200,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
+            ),
           ),
         ),
       ),

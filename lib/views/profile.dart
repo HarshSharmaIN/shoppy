@@ -18,140 +18,151 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          "Profile",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      body: SafeArea(
         child: Column(
           children: [
-            // Profile Header
-            Consumer<UserProvider>(
-              builder: (context, value, child) => ModernCard(
-                child: Row(
+            // Custom App Bar
+            Container(
+        backgroundColor: Colors.white,
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Profile",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            // Body Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(
-                        Icons.person,
-                        size: 30,
-                        color: Theme.of(context).primaryColor,
+                    // Profile Header
+                    Consumer<UserProvider>(
+                      builder: (context, value, child) => ModernCard(
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                size: 30,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    value.name.isNotEmpty ? value.name : "User",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    value.email.isNotEmpty ? value.email : "user@example.com",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: IconButton(
+                                onPressed: () => Navigator.pushNamed(context, "/update_profile"),
+                                icon: const Icon(Icons.edit_outlined),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Menu Items
+                    ModernCard(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            value.name.isNotEmpty ? value.name : "User",
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                          _buildMenuItem(
+                            icon: Icons.local_shipping_outlined,
+                            title: "My Orders",
+                            subtitle: "Track your orders",
+                            onTap: () => Navigator.pushNamed(context, "/orders"),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            value.email.isNotEmpty ? value.email : "user@example.com",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
-                            ),
+                          const Divider(height: 1),
+                          _buildMenuItem(
+                            icon: Icons.discount_outlined,
+                            title: "Discount & Offers",
+                            subtitle: "View available coupons",
+                            onTap: () => Navigator.pushNamed(context, "/discount"),
+                          ),
+                          const Divider(height: 1),
+                          _buildMenuItem(
+                            icon: Icons.support_agent,
+                            title: "Help & Support",
+                            subtitle: "Get help when you need it",
+                            onTap: () => SnackBarUtils.showInfo(context, "Mail us at ecommerce@shop.com"),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: IconButton(
-                        onPressed: () => Navigator.pushNamed(context, "/update_profile"),
-                        icon: const Icon(Icons.edit_outlined),
+                    
+                    const SizedBox(height: 16),
+                    
+                    // Logout
+                    ModernCard(
+                      child: ListTile(
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.logout_outlined,
+                            color: Colors.red.shade600,
+                            size: 20,
+                          ),
+                        ),
+                        title: const Text(
+                          "Logout",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        subtitle: const Text("Sign out of your account"),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () => _showLogoutDialog(),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            
-            const SizedBox(height: 24),
-            
-            // Menu Items
-            ModernCard(
-              child: Column(
-                children: [
-                  _buildMenuItem(
-                    icon: Icons.local_shipping_outlined,
-                    title: "My Orders",
-                    subtitle: "Track your orders",
-                    onTap: () => Navigator.pushNamed(context, "/orders"),
-                  ),
-                  const Divider(height: 1),
-                  _buildMenuItem(
-                    icon: Icons.discount_outlined,
-                    title: "Discount & Offers",
-                    subtitle: "View available coupons",
-                    onTap: () => Navigator.pushNamed(context, "/discount"),
-                  ),
-                  const Divider(height: 1),
-                  _buildMenuItem(
-                    icon: Icons.support_agent,
-                    title: "Help & Support",
-                    subtitle: "Get help when you need it",
-                    onTap: () => SnackBarUtils.showInfo(context, "Mail us at ecommerce@shop.com"),
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Logout
-            ModernCard(
-              child: ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.logout_outlined,
-                    color: Colors.red.shade600,
-                    size: 20,
-                  ),
-                ),
-                title: const Text(
-                  "Logout",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                subtitle: const Text("Sign out of your account"),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                onTap: () => _showLogoutDialog(),
-              ),
-            ),
           ],
+          ),
         ),
       ),
     );

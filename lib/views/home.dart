@@ -17,53 +17,65 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: Text(
-          "Discover",
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPage()),
-                );
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 8),
-            PromoContainer(),
-            const SizedBox(height: 8),
-            DiscountContainer(),
-            const SizedBox(height: 8),
-            CategoryContainer(),
-            const SizedBox(height: 8),
-            HomePageMakerContainer(),
-            const SizedBox(height: 20),
+            // Custom App Bar
+            Container(
+        backgroundColor: Colors.white,
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Text(
+                    "Discover",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SearchPage()),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Body Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    PromoContainer(),
+                    const SizedBox(height: 8),
+                    DiscountContainer(),
+                    const SizedBox(height: 8),
+                    CategoryContainer(),
+                    const SizedBox(height: 8),
+                    HomePageMakerContainer(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
           ],
+          ),
         ),
       ),
     );

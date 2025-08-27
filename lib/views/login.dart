@@ -21,7 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SafeArea(
+        child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -32,8 +33,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Form(
               key: formKey,
@@ -184,7 +184,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        ),
       ),
     );
   }

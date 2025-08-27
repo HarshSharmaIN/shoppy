@@ -2,6 +2,7 @@ import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/categories_model.dart';
 import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CategoryContainer extends StatefulWidget {
@@ -124,11 +125,17 @@ class _CategoryButtonState extends State<CategoryButton> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
+                  child: CachedNetworkImage(
                     widget.imagepath,
                     width: 40,
                     height: 40,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
