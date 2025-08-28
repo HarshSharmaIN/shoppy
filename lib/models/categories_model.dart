@@ -16,7 +16,7 @@ class CategoriesModel {
       name: json["name"] ?? "",
       image: json["image"] ?? "",
       priority: json["priority"] ?? 0,
-      id: id ?? "",
+      id: id,
     );
   }
 

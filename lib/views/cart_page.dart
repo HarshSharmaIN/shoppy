@@ -23,9 +23,9 @@ class _CartPageState extends State<CartPage> {
           children: [
             // Custom App Bar
             Container(
-        backgroundColor: Colors.white,
+              color: Colors.white,
               padding: const EdgeInsets.all(16),
-              child: Text(
+              child: const Text(
                 "Your Cart",
                 style: TextStyle(
                   fontSize: 24,
@@ -34,110 +34,120 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
             ),
+
             // Body Content
             Expanded(
               child: Consumer<CartProvider>(
                 builder: (context, value, child) {
                   if (value.isLoading) {
                     return const Center(child: ModernLoader());
-                  } else {
-                    if (value.carts.isEmpty) {
-                      return EmptyStateWidget(
-                        icon: Icons.shopping_cart_outlined,
-                        title: "Your cart is empty",
-                        subtitle: "Add some items to get started shopping!",
-                        buttonText: "Start Shopping",
-                        onButtonPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            "/home",
-                            (route) => false,
-                          );
-                        },
-                        iconColor: Colors.blue,
-                      );
-                    } else {
-                      if (value.products.isNotEmpty) {
-                        return ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: value.carts.length,
-                          itemBuilder: (context, index) {
-                            return CartContainer(
-                              image: value.products[index].image,
-                              name: value.products[index].name,
-                              new_price: value.products[index].new_price,
-                              old_price: value.products[index].old_price,
-                              maxQuantity: value.products[index].maxQuantity,
-                              selectedQuantity: value.carts[index].quantity,
-                              productId: value.products[index].id,
-                            );
-                          },
-                        );
-                      } else {
-                        return const Center(child: ModernLoader());
-                      }
-                    }
                   }
+
+                  if (value.carts.isEmpty) {
+                    return EmptyStateWidget(
+                      icon: Icons.shopping_cart_outlined,
+                      title: "Your cart is empty",
+                      subtitle: "Add some items to get started shopping!",
+                      buttonText: "Start Shopping",
+                      onButtonPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          "/home",
+                          (route) => false,
+                        );
+                      },
+                      iconColor: Colors.blue,
+                    );
+                  }
+
+                  if (value.products.isEmpty) {
+                    return const Center(child: ModernLoader());
+                  }
+
+                  // Fixed mapping between cart and product
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: value.carts.length,
+                    itemBuilder: (context, index) {
+                      final cartItem = value.carts[index];
+                      final product = value.products.firstWhere(
+                        (p) => p.id == cartItem.productId,
+                        orElse: () =>
+                            value.products[0], // fallback to avoid crash
+                      );
+
+                      return CartContainer(
+                        image: product.image,
+                        name: product.name,
+                        new_price: product.new_price,
+                        old_price: product.old_price,
+                        maxQuantity: product.maxQuantity,
+                        selectedQuantity: cartItem.quantity,
+                        productId: product.id,
+                      );
+                    },
+                  );
                 },
               ),
             ),
           ],
-          ),
         ),
       ),
+
+      // Bottom bar
       bottomNavigationBar: Consumer<CartProvider>(
         builder: (context, value, child) {
-          if (value.carts.length == 0) {
-            return SizedBox();
-          } else {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
+          if (value.carts.isEmpty) {
+            return const SizedBox();
+          }
+
+          return Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total Amount",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      Text(
+                        "₹${value.totalCost}",
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ModernButton(
+                    text: "Proceed to Checkout",
+                    onPressed: () => Navigator.pushNamed(context, "/checkout"),
+                    width: double.infinity,
+                    icon: Icons.arrow_forward,
                   ),
                 ],
               ),
-              child: SafeArea(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Total Amount",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        Text(
-                          "₹${value.totalCost}",
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ModernButton(
-                      text: "Proceed to Checkout",
-                      onPressed: () => Navigator.pushNamed(context, "/checkout"),
-                      width: double.infinity,
-                      icon: Icons.arrow_forward,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
+            ),
+          );
         },
       ),
     );

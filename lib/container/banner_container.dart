@@ -40,24 +40,22 @@ class _BannerContainerState extends State<BannerContainer> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: CachedNetworkImage(
-            widget.image, 
+            imageUrl: widget.image,
             fit: BoxFit.cover,
             width: double.infinity,
             placeholder: (context, url) => Container(
               color: Colors.grey.shade200,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
             errorWidget: (context, url, error) => Container(
-                color: Colors.grey.shade200,
-                child: const Center(
-                  child: Icon(
-                    Icons.image_not_supported,
-                    color: Colors.grey,
-                    size: 50,
-                  ),
+              color: Colors.grey.shade200,
+              child: const Center(
+                child: Icon(
+                  Icons.image_not_supported,
+                  color: Colors.grey,
+                  size: 50,
                 ),
+              ),
             ),
           ),
         ),

@@ -20,9 +20,9 @@ class _PromoContainerState extends State<PromoContainer> {
       stream: DbService().readPromos(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<PromoBannersModel> promos =
-              PromoBannersModel.fromJsonList(snapshot.data!.docs)
-                  as List<PromoBannersModel>;
+          List<PromoBannersModel> promos = PromoBannersModel.fromJsonList(
+            snapshot.data!.docs,
+          );
           if (promos.isEmpty) {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -60,7 +60,7 @@ class _PromoContainerState extends State<PromoContainer> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: CachedNetworkImage(
-                            promo.image,
+                            imageUrl: promo.image,
                             fit: BoxFit.cover,
                             width: double.infinity,
                             placeholder: (context, url) => Container(

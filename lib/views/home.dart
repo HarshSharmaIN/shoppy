@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
           children: [
             // Custom App Bar
             Container(
-        backgroundColor: Colors.white,
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
@@ -47,10 +46,7 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(builder: (context) => SearchPage()),
                         );
                       },
-                      icon: const Icon(
-                        Icons.search,
-                        color: Colors.black87,
-                      ),
+                      icon: const Icon(Icons.search, color: Colors.black87),
                     ),
                   ),
                 ],
@@ -75,7 +71,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-          ),
         ),
       ),
     );

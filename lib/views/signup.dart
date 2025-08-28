@@ -24,17 +24,14 @@ class _SingupPageState extends State<SingupPage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.grey.shade50,
-              Colors.white,
-            ],
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.grey.shade50, Colors.white],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Form(
               key: formKey,
@@ -42,7 +39,7 @@ class _SingupPageState extends State<SingupPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 40),
-                  
+
                   // Header
                   Center(
                     child: Column(
@@ -51,7 +48,9 @@ class _SingupPageState extends State<SingupPage> {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Icon(
@@ -80,9 +79,9 @@ class _SingupPageState extends State<SingupPage> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 48),
-                  
+
                   // Name field
                   ModernTextField(
                     controller: _nameController,
@@ -99,9 +98,9 @@ class _SingupPageState extends State<SingupPage> {
                       return null;
                     },
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Email field
                   ModernTextField(
                     controller: _emailController,
@@ -113,22 +112,26 @@ class _SingupPageState extends State<SingupPage> {
                       if (value == null || value.isEmpty) {
                         return "Email cannot be empty";
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      if (!RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value)) {
                         return "Please enter a valid email";
                       }
                       return null;
                     },
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Password field
                   ModernTextField(
                     controller: _passwordController,
                     label: "Password",
                     hint: "Create a strong password",
                     prefixIcon: Icons.lock_outline,
-                    suffixIcon: _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    suffixIcon: _obscurePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     obscureText: _obscurePassword,
                     onSuffixTap: () {
                       setState(() {
@@ -145,9 +148,9 @@ class _SingupPageState extends State<SingupPage> {
                       return null;
                     },
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Sign up button
                   ModernButton(
                     text: "Create Account",
@@ -156,9 +159,9 @@ class _SingupPageState extends State<SingupPage> {
                     width: double.infinity,
                     icon: Icons.person_add,
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Login link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -187,29 +190,29 @@ class _SingupPageState extends State<SingupPage> {
               ),
             ),
           ),
+        ),
       ),
     );
   }
 
   void _signUp() async {
     if (!formKey.currentState!.validate()) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       final result = await AuthService().createAccountWithEmail(
         _nameController.text.trim(),
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       if (result == "Account Created") {
-        SnackBarUtils.showSuccess(context, "Account created successfully! Welcome aboard!");
-        Navigator.pushNamedAndRemoveUntil(
+        SnackBarUtils.showSuccess(
           context,
-          "/home",
-          (route) => false,
+          "Account created successfully! Welcome aboard!",
         );
+        Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
       } else {
         SnackBarUtils.showError(context, result);
       }

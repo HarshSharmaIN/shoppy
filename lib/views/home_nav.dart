@@ -66,7 +66,9 @@ class _HomeNavState extends State<HomeNav> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               child: Icon(
-                selectedIndex == 1 ? Icons.local_shipping : Icons.local_shipping_outlined,
+                selectedIndex == 1
+                    ? Icons.local_shipping
+                    : Icons.local_shipping_outlined,
                 size: 24,
               ),
             ),
@@ -77,7 +79,7 @@ class _HomeNavState extends State<HomeNav> {
               builder: (context, value, child) {
                 return Container(
                   padding: const EdgeInsets.all(8),
-                  child: value.carts.length > 0
+                  child: value.carts.isNotEmpty
                       ? Badge(
                           label: Text(
                             value.carts.length.toString(),
@@ -89,12 +91,16 @@ class _HomeNavState extends State<HomeNav> {
                           ),
                           backgroundColor: Colors.red.shade500,
                           child: Icon(
-                            selectedIndex == 2 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                            selectedIndex == 2
+                                ? Icons.shopping_cart
+                                : Icons.shopping_cart_outlined,
                             size: 24,
                           ),
                         )
                       : Icon(
-                          selectedIndex == 2 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                          selectedIndex == 2
+                              ? Icons.shopping_cart
+                              : Icons.shopping_cart_outlined,
                           size: 24,
                         ),
                 );
@@ -110,23 +116,6 @@ class _HomeNavState extends State<HomeNav> {
                 size: 24,
               ),
             ),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-                  );
-                }
-                return Icon(Icons.shopping_cart_outlined);
-              },
-            ),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
             label: 'Profile',
           ),
         ],

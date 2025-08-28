@@ -19,16 +19,17 @@ class _CategoryContainerState extends State<CategoryContainer> {
       stream: DbService().readCategories(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<CategoriesModel> categories =
-              CategoriesModel.fromJsonList(snapshot.data!.docs)
-                  as List<CategoriesModel>;
+          List<CategoriesModel> categories = CategoriesModel.fromJsonList(
+            snapshot.data!.docs,
+          );
           if (categories.isEmpty) {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: EmptyStateWidget(
                 icon: Icons.category_outlined,
                 title: "No Categories Available",
-                subtitle: "We're working on adding product categories. Stay tuned!",
+                subtitle:
+                    "We're working on adding product categories. Stay tuned!",
                 iconColor: Colors.indigo,
               ),
             );
@@ -126,11 +127,12 @@ class _CategoryButtonState extends State<CategoryButton> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: CachedNetworkImage(
-                    widget.imagepath,
+                    imageUrl: widget.imagepath,
                     width: 40,
                     height: 40,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(
                       Icons.image_not_supported,
                       color: Colors.grey,

@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/controllers/auth_service.dart';
 import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
@@ -9,6 +8,7 @@ import 'package:ecommerce_app/views/home_nav.dart';
 import 'package:ecommerce_app/views/intro_screen.dart';
 import 'package:ecommerce_app/views/login.dart';
 import 'package:ecommerce_app/views/orders_page.dart';
+import 'package:ecommerce_app/views/search_page.dart';
 import 'package:ecommerce_app/views/signup.dart';
 import 'package:ecommerce_app/views/specific_products.dart';
 import 'package:ecommerce_app/views/splash_screen.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
       child: MaterialApp(
-        title: 'eCommerce App',
+        title: 'Shoppy App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // This is the theme of your application.

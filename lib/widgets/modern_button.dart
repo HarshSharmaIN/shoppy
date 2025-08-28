@@ -57,11 +57,7 @@ class ModernButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (icon != null && !isLoading) ...[
-                  Icon(
-                    icon,
-                    color: textColor ?? Colors.white,
-                    size: 20,
-                  ),
+                  Icon(icon, color: textColor ?? Colors.white, size: 20),
                   const SizedBox(width: 8),
                 ],
                 if (isLoading)

@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/controllers/db_service.dart';
 import 'package:ecommerce_app/models/coupon_model.dart';
 import 'package:ecommerce_app/widgets/empty_state_widget.dart';
+import 'package:ecommerce_app/widgets/modern_loader.dart';
 import 'package:flutter/material.dart';
 
 class DiscountContainer extends StatefulWidget {
@@ -18,8 +19,7 @@ class _DiscountContainerState extends State<DiscountContainer> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<CouponModel> discounts =
-              CouponModel.fromJsonList(snapshot.data!.docs)
-                  as List<CouponModel>;
+              CouponModel.fromJsonList(snapshot.data!.docs);
 
           if (discounts.isEmpty) {
             return Container(
@@ -27,7 +27,8 @@ class _DiscountContainerState extends State<DiscountContainer> {
               child: EmptyStateWidget(
                 icon: Icons.local_offer_outlined,
                 title: "No Discount Coupons",
-                subtitle: "We're preparing amazing discounts for you. Check back soon!",
+                subtitle:
+                    "We're preparing amazing discounts for you. Check back soon!",
                 iconColor: Colors.green,
               ),
             );
@@ -38,10 +39,7 @@ class _DiscountContainerState extends State<DiscountContainer> {
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Colors.blue.shade400,
-                      Colors.blue.shade600,
-                    ],
+                    colors: [Colors.blue.shade400, Colors.blue.shade600],
                   ),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [

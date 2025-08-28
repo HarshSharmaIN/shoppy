@@ -54,9 +54,9 @@ class _OrdersPageState extends State<OrdersPage> {
     required Color textColor,
   }) {
     return Container(
-      child: Text(text, style: TextStyle(color: textColor)),
       color: bgColor,
       padding: EdgeInsets.all(8),
+      child: Text(text, style: TextStyle(color: textColor)),
     );
   }
 
@@ -75,14 +75,15 @@ class _OrdersPageState extends State<OrdersPage> {
         stream: DbService().readOrders(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<OrdersModel> orders =
-                OrdersModel.fromJsonList(snapshot.data!.docs)
-                    as List<OrdersModel>;
+            List<OrdersModel> orders = OrdersModel.fromJsonList(
+              snapshot.data!.docs,
+            );
             if (orders.isEmpty) {
               return EmptyStateWidget(
                 icon: Icons.shopping_bag_outlined,
                 title: "No Orders Yet",
-                subtitle: "You haven't placed any orders yet. Start shopping to see your orders here!",
+                subtitle:
+                    "You haven't placed any orders yet. Start shopping to see your orders here!",
                 buttonText: "Start Shopping",
                 onButtonPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
@@ -185,7 +186,7 @@ class _ViewOrderState extends State<ViewOrder> {
                           children: [
                             Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   height: 50,
                                   width: 50,
                                   child: Image.network(e.image),
@@ -246,7 +247,6 @@ class _ViewOrderState extends State<ViewOrder> {
                       height: 60,
                       width: MediaQuery.of(context).size.width * .9,
                       child: ElevatedButton(
-                        child: Text("Modify Order"),
                         onPressed: () {
                           showDialog(
                             context: context,
@@ -257,6 +257,7 @@ class _ViewOrderState extends State<ViewOrder> {
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
                         ),
+                        child: Text("Modify Order"),
                       ),
                     )
                   : SizedBox(),

@@ -31,14 +31,16 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       _isLoading = true;
     });
-    
+
     List<ProductsModel> allProducts = [];
-    
+
     try {
       // Get all categories first
       final categoriesSnapshot = await DbService().readCategories().first;
-      final categories = categoriesSnapshot.docs.map((doc) => doc['name'] as String).toList();
-      
+      final categories = categoriesSnapshot.docs
+          .map((doc) => doc['name'] as String)
+          .toList();
+
       // Load products from all categories
       for (String category in categories) {
         try {
@@ -52,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
     } catch (e) {
       print('Error loading categories: $e');
     }
-    
+
     setState(() {
       _allProducts = allProducts;
       _isLoading = false;
@@ -66,10 +68,14 @@ class _SearchPageState extends State<SearchPage> {
         _filteredProducts = [];
       } else {
         _filteredProducts = _allProducts
-            .where((product) =>
-                product.name.toLowerCase().contains(query.toLowerCase()) ||
-                product.description.toLowerCase().contains(query.toLowerCase()) ||
-                product.category.toLowerCase().contains(query.toLowerCase()))
+            .where(
+              (product) =>
+                  product.name.toLowerCase().contains(query.toLowerCase()) ||
+                  product.description.toLowerCase().contains(
+                    query.toLowerCase(),
+                  ) ||
+                  product.category.toLowerCase().contains(query.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -105,155 +111,161 @@ class _SearchPageState extends State<SearchPage> {
               onChanged: _searchProducts,
             ),
           ),
-          
+
           // Search Results
           Expanded(
             child: _isLoading
                 ? const Center(child: ModernLoader())
                 : !_hasSearched
-                    ? EmptyStateWidget(
-                        icon: Icons.search,
-                        title: "Start Searching",
-                        subtitle: "Enter a product name, category, or description to find what you're looking for.",
-                        iconColor: Colors.blue,
-                      )
-                    : _filteredProducts.isEmpty
-                        ? EmptyStateWidget(
-                            icon: Icons.search_off,
-                            title: "No Results Found",
-                            subtitle: "We couldn't find any products matching '${_searchController.text}'. Try different keywords.",
-                            iconColor: Colors.orange,
-                          )
-                        : GridView.builder(
-                            padding: const EdgeInsets.all(16),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 0.75,
-                            ),
-                            itemCount: _filteredProducts.length,
-                            itemBuilder: (context, index) {
-                              final product = _filteredProducts[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    "/view_product",
-                                    arguments: product,
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.08),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
+                ? EmptyStateWidget(
+                    icon: Icons.search,
+                    title: "Start Searching",
+                    subtitle:
+                        "Enter a product name, category, or description to find what you're looking for.",
+                    iconColor: Colors.blue,
+                  )
+                : _filteredProducts.isEmpty
+                ? EmptyStateWidget(
+                    icon: Icons.search_off,
+                    title: "No Results Found",
+                    subtitle:
+                        "We couldn't find any products matching '${_searchController.text}'. Try different keywords.",
+                    iconColor: Colors.orange,
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.75,
+                        ),
+                    itemCount: _filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = _filteredProducts[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            "/view_product",
+                            arguments: product,
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade50,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: CachedNetworkImage(
+                                        imageUrl: product.image,
+                                        fit: BoxFit.contain,
+                                        width: double.infinity,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                        errorWidget: (context, url, error) =>
+                                            const Center(
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                color: Colors.grey,
+                                                size: 40,
+                                              ),
+                                            ),
                                       ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(12),
-                                              child: CachedNetworkImage(
-                                                product.image,
-                                                fit: BoxFit.contain,
-                                                width: double.infinity,
-                                                placeholder: (context, url) => const Center(
-                                                  child: CircularProgressIndicator(),
-                                                ),
-                                                errorWidget: (context, url, error) => const Center(
-                                                  child: Icon(
-                                                    Icons.image_not_supported,
-                                                    color: Colors.grey,
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          product.name,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          product.category.toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "₹${product.old_price}",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade600,
-                                                decoration: TextDecoration.lineThrough,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              "₹${product.new_price}",
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.arrow_downward,
-                                              color: Colors.green,
-                                              size: 12,
-                                            ),
-                                            Text(
-                                              "${discountPercent(product.old_price, product.new_price)}% OFF",
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
                                     ),
                                   ),
                                 ),
-                              );
-                            },
+                                const SizedBox(height: 8),
+                                Text(
+                                  product.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  product.category.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "₹${product.old_price}",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "₹${product.new_price}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.arrow_downward,
+                                      color: Colors.green,
+                                      size: 12,
+                                    ),
+                                    Text(
+                                      "${discountPercent(product.old_price, product.new_price)}% OFF",
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

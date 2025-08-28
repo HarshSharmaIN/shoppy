@@ -50,7 +50,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     setState(() => _isProcessingPayment = false);
-    
+
     try {
       // Verify payment (in production, do this on server)
       final isValid = await RazorpayPaymentService.verifyPayment(
@@ -59,12 +59,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
         signature: response.signature ?? '',
       );
 
-      if (isValid || true) { // For demo, we'll proceed without verification
+      if (isValid || true) {
+        // For demo, we'll proceed without verification
         await _processSuccessfulPayment(response.paymentId ?? '');
         SnackBarUtils.showSuccess(context, "Payment successful! Order placed.");
         Navigator.pop(context);
-      } else {
-        SnackBarUtils.showError(context, "Payment verification failed");
       }
     } catch (e) {
       SnackBarUtils.showError(context, "Error processing payment: $e");
@@ -74,16 +73,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void _handlePaymentError(PaymentFailureResponse response) {
     setState(() => _isProcessingPayment = false);
     SnackBarUtils.showError(
-      context, 
-      "Payment failed: ${response.message ?? 'Unknown error'}"
+      context,
+      "Payment failed: ${response.message ?? 'Unknown error'}",
     );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     setState(() => _isProcessingPayment = false);
     SnackBarUtils.showInfo(
-      context, 
-      "External wallet selected: ${response.walletName}"
+      context,
+      "External wallet selected: ${response.walletName}",
     );
   }
 
@@ -91,7 +90,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final cart = Provider.of<CartProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: false);
     User? currentUser = FirebaseAuth.instance.currentUser;
-    
+
     List products = [];
     for (int i = 0; i < cart.products.length; i++) {
       products.add({
@@ -147,8 +146,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void _startPayment() async {
     final user = Provider.of<UserProvider>(context, listen: false);
     final cart = Provider.of<CartProvider>(context, listen: false);
-    
-    if (user.address.isEmpty || user.phone.isEmpty || user.name.isEmpty || user.email.isEmpty) {
+
+    if (user.address.isEmpty ||
+        user.phone.isEmpty ||
+        user.name.isEmpty ||
+        user.email.isEmpty) {
       SnackBarUtils.showError(context, "Please fill your delivery details.");
       return;
     }
@@ -158,7 +160,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     try {
       final totalAmount = cart.totalCost - discount;
       final amountInPaise = (totalAmount * 100).toString();
-      
+
       // Create Razorpay order
       final orderData = await RazorpayPaymentService.createOrder(
         amount: amountInPaise,
@@ -177,9 +179,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           'email': user.email,
           'name': user.name,
         },
-        'theme': {
-          'color': '#2196F3'
-        }
+        'theme': {'color': '#2196F3'},
       };
 
       _razorpay.open(options);
@@ -267,7 +267,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: IconButton(
-                                        onPressed: () => Navigator.pushNamed(context, "/update_profile"),
+                                        onPressed: () => Navigator.pushNamed(
+                                          context,
+                                          "/update_profile",
+                                        ),
                                         icon: const Icon(Icons.edit_outlined),
                                       ),
                                     ),
@@ -281,9 +284,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               ],
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20),
-                          
+
                           // Coupon Section
                           Container(
                             padding: const EdgeInsets.all(20),
@@ -328,7 +331,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         label: "Coupon Code",
                                         hint: "Enter coupon for extra discount",
                                         prefixIcon: Icons.confirmation_number,
-                                        textCapitalization: TextCapitalization.characters,
+                                        textCapitalization:
+                                            TextCapitalization.characters,
                                       ),
                                     ),
                                     const SizedBox(width: 12),
@@ -346,7 +350,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     decoration: BoxDecoration(
                                       color: Colors.green.shade50,
                                       borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: Colors.green.shade200),
+                                      border: Border.all(
+                                        color: Colors.green.shade200,
+                                      ),
                                     ),
                                     child: Row(
                                       children: [
@@ -372,9 +378,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               ],
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20),
-                          
+
                           // Order Summary
                           Container(
                             padding: const EdgeInsets.all(20),
@@ -411,12 +417,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   ],
                                 ),
                                 const SizedBox(height: 16),
-                                _buildSummaryRow("Items (${cartData.totalQuantity})", "₹${cartData.totalCost}"),
+                                _buildSummaryRow(
+                                  "Items (${cartData.totalQuantity})",
+                                  "₹${cartData.totalCost}",
+                                ),
                                 if (discount > 0)
-                                  _buildSummaryRow("Discount", "-₹$discount", isDiscount: true),
+                                  _buildSummaryRow(
+                                    "Discount",
+                                    "-₹$discount",
+                                    isDiscount: true,
+                                  ),
                                 const Divider(height: 24),
                                 _buildSummaryRow(
-                                  "Total Payable", 
+                                  "Total Payable",
                                   "₹${cartData.totalCost - discount}",
                                   isTotal: true,
                                 ),
@@ -449,8 +462,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
             child: SafeArea(
               child: ModernButton(
-                text: _isProcessingPayment 
-                    ? "Processing..." 
+                text: _isProcessingPayment
+                    ? "Processing..."
                     : "Pay ₹${cartData.totalCost - discount}",
                 onPressed: _isProcessingPayment ? () {} : _startPayment,
                 isLoading: _isProcessingPayment,
@@ -494,7 +507,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {bool isDiscount = false, bool isTotal = false}) {
+  Widget _buildSummaryRow(
+    String label,
+    String value, {
+    bool isDiscount = false,
+    bool isTotal = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -513,11 +531,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
             style: TextStyle(
               fontSize: isTotal ? 20 : 16,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.w600,
-              color: isDiscount 
-                  ? Colors.green.shade600 
-                  : isTotal 
-                      ? Theme.of(context).primaryColor 
-                      : Colors.black87,
+              color: isDiscount
+                  ? Colors.green.shade600
+                  : isTotal
+                  ? Theme.of(context).primaryColor
+                  : Colors.black87,
             ),
           ),
         ],
@@ -542,7 +560,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
         int percent = doc.get('discount');
 
         discountText = "Great! $percent% discount applied with code $code";
-        discountCalculator(percent, Provider.of<CartProvider>(context, listen: false).totalCost);
+        discountCalculator(
+          percent,
+          Provider.of<CartProvider>(context, listen: false).totalCost,
+        );
         SnackBarUtils.showSuccess(context, "Coupon applied successfully!");
       } else {
         discountText = "Invalid coupon code. Please try again.";

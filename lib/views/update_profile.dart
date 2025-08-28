@@ -15,10 +15,10 @@ class UpdateProfile extends StatefulWidget {
 
 class _UpdateProfileState extends State<UpdateProfile> {
   final formKey = GlobalKey<FormState>();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -109,9 +109,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
   void _updateProfile() async {
     if (!formKey.currentState!.validate()) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       var data = {
         "name": _nameController.text.trim(),
@@ -119,13 +119,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
         "address": _addressController.text.trim(),
         "phone": _phoneController.text.trim(),
       };
-      
+
       await DbService().updateUserData(extraData: data);
-      
+
       SnackBarUtils.showSuccess(context, "Profile updated successfully!");
       Navigator.pop(context);
     } catch (e) {
-      SnackBarUtils.showError(context, "Failed to update profile. Please try again.");
+      SnackBarUtils.showError(
+        context,
+        "Failed to update profile. Please try again.",
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

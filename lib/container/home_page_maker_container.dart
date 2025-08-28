@@ -27,16 +27,17 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
       stream: DbService().readCategories(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<CategoriesModel> categories =
-              CategoriesModel.fromJsonList(snapshot.data!.docs)
-                  as List<CategoriesModel>;
+          List<CategoriesModel> categories = CategoriesModel.fromJsonList(
+            snapshot.data!.docs,
+          );
           if (categories.isEmpty) {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: EmptyStateWidget(
                 icon: Icons.inventory_2_outlined,
                 title: "No Products Available",
-                subtitle: "We're stocking up on amazing products. Come back soon for great deals!",
+                subtitle:
+                    "We're stocking up on amazing products. Come back soon for great deals!",
                 iconColor: Colors.orange,
               ),
             );
@@ -45,35 +46,30 @@ class _HomePageMakerContainerState extends State<HomePageMakerContainer> {
               stream: DbService().readBanners(),
               builder: (context, bannerSnapshot) {
                 if (bannerSnapshot.hasData) {
-                  List<PromoBannersModel> banners =
-                      PromoBannersModel.fromJsonList(bannerSnapshot.data!.docs)
-                          as List<PromoBannersModel>;
-                  
-                    return Column(
-                      children: [
-                        for (
-                          int i = 0;
-                          i <
-                              minCalculator(
-                                categories.length,
-                                bannerSnapshot.data!.docs.length,
-                              );
-                          i++
-                        )
-                          Column(
-                            children: [
-                              ZoneContainer(
-                                category: categories[i].name,
-                              ),
-                              BannerContainer(
-                                image: bannerSnapshot.data!.docs[i]["image"],
-                                category:
-                                    bannerSnapshot.data!.docs[i]["category"],
-                              ),
-                            ],
-                          ),
-                      ],
-                    );
+                  PromoBannersModel.fromJsonList(bannerSnapshot.data!.docs);
+                  return Column(
+                    children: [
+                      for (
+                        int i = 0;
+                        i <
+                            minCalculator(
+                              categories.length,
+                              bannerSnapshot.data!.docs.length,
+                            );
+                        i++
+                      )
+                        Column(
+                          children: [
+                            ZoneContainer(category: categories[i].name),
+                            BannerContainer(
+                              image: bannerSnapshot.data!.docs[i]["image"],
+                              category:
+                                  bannerSnapshot.data!.docs[i]["category"],
+                            ),
+                          ],
+                        ),
+                    ],
+                  );
                 } else {
                   return const Center(child: ModernLoader());
                 }

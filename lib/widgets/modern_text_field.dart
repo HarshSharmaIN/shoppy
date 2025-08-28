@@ -93,10 +93,7 @@ class _ModernTextFieldState extends State<ModernTextField> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-              color: Colors.grey.shade200,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -107,17 +104,11 @@ class _ModernTextFieldState extends State<ModernTextField> {
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,

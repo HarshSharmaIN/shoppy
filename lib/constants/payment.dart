@@ -9,13 +9,14 @@ class RazorpayPaymentService {
     required String receipt,
   }) async {
     try {
+      print(dotenv.env["RAZORPAY_KEY_ID"]);
       final keyId = dotenv.env["RAZORPAY_KEY_ID"]!;
       final keySecret = dotenv.env["RAZORPAY_KEY_SECRET"]!;
-      
+
       final url = Uri.parse('https://api.razorpay.com/v1/orders');
-      
+
       final credentials = base64Encode(utf8.encode('$keyId:$keySecret'));
-      
+
       final body = {
         'amount': amount, // Amount in paise (multiply by 100)
         'currency': currency,
@@ -50,13 +51,16 @@ class RazorpayPaymentService {
   }) async {
     try {
       final keySecret = dotenv.env["RAZORPAY_KEY_SECRET"]!;
-      
+
       // Create the verification string
       final verificationString = '$orderId|$paymentId';
-      
+
       // Generate HMAC SHA256 signature
-      final expectedSignature = _generateSignature(verificationString, keySecret);
-      
+      final expectedSignature = _generateSignature(
+        verificationString,
+        keySecret,
+      );
+
       return expectedSignature == signature;
     } catch (e) {
       print('Error verifying payment: $e');

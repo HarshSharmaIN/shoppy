@@ -30,7 +30,7 @@ class ProductsModel {
       old_price: json["old_price"] ?? 0,
       category: json["category"] ?? "",
       maxQuantity: json["quantity"] ?? 0,
-      id: id ?? "",
+      id: id,
     );
   }
 

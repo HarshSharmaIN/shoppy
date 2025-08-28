@@ -30,9 +30,9 @@ class _ZoneContainerState extends State<ZoneContainer> {
       stream: DbService().readProducts(widget.category),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<ProductsModel> products =
-              ProductsModel.fromJsonList(snapshot.data!.docs)
-                  as List<ProductsModel>;
+          List<ProductsModel> products = ProductsModel.fromJsonList(
+            snapshot.data!.docs,
+          );
           if (products.isEmpty) {
             return const SizedBox.shrink();
           } else {
@@ -106,15 +106,17 @@ class _ZoneContainerState extends State<ZoneContainer> {
                                     ),
                                     child: Center(
                                       child: CachedNetworkImage(
-                                        products[i].image,
+                                        imageUrl: products[i].image,
                                         height: 100,
                                         fit: BoxFit.contain,
-                                        placeholder: (context, url) => const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) => const Icon(
-                                            Icons.image_not_supported,
-                                            color: Colors.grey,
-                                            size: 40,
-                                        ),
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(
+                                              Icons.image_not_supported,
+                                              color: Colors.grey,
+                                              size: 40,
+                                            ),
                                       ),
                                     ),
                                   ),

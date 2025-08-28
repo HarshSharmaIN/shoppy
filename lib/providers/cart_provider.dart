@@ -31,8 +31,7 @@ class CartProvider extends ChangeNotifier {
     isLoading = true;
     _cartSubscription?.cancel();
     _cartSubscription = DbService().readUserCart().listen((snapshot) {
-      List<CartModel> cartsData =
-          CartModel.fromJsonList(snapshot.docs) as List<CartModel>;
+      List<CartModel> cartsData = CartModel.fromJsonList(snapshot.docs);
 
       carts = cartsData;
 
@@ -41,7 +40,7 @@ class CartProvider extends ChangeNotifier {
         cartUids.add(carts[i].productId);
         print("cartUids: ${cartUids[i]}");
       }
-      if (carts.length > 0) {
+      if (carts.isNotEmpty) {
         readCartProducts(cartUids);
       }
       isLoading = false;
@@ -52,8 +51,9 @@ class CartProvider extends ChangeNotifier {
   void readCartProducts(List<String> uids) {
     _productSubscription?.cancel();
     _productSubscription = DbService().searchProducts(uids).listen((snapshot) {
-      List<ProductsModel> productsData =
-          ProductsModel.fromJsonList(snapshot.docs) as List<ProductsModel>;
+      List<ProductsModel> productsData = ProductsModel.fromJsonList(
+        snapshot.docs,
+      );
       products = productsData;
       isLoading = false;
       addCost(products, carts);

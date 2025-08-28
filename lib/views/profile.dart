@@ -23,9 +23,9 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             // Custom App Bar
             Container(
-        backgroundColor: Colors.white,
+              color: Colors.white,
               padding: const EdgeInsets.all(16),
-              child: Text(
+              child: const Text(
                 "Profile",
                 style: TextStyle(
                   fontSize: 24,
@@ -34,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
+
             // Body Content
             Expanded(
               child: SingleChildScrollView(
@@ -49,7 +50,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 60,
                               height: 60,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                color: Theme.of(
+                                  context,
+                                ).primaryColor.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Icon(
@@ -73,7 +76,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    value.email.isNotEmpty ? value.email : "user@example.com",
+                                    value.email.isNotEmpty
+                                        ? value.email
+                                        : "user@example.com",
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade600,
@@ -88,7 +93,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: IconButton(
-                                onPressed: () => Navigator.pushNamed(context, "/update_profile"),
+                                onPressed: () => Navigator.pushNamed(
+                                  context,
+                                  "/update_profile",
+                                ),
                                 icon: const Icon(Icons.edit_outlined),
                               ),
                             ),
@@ -96,9 +104,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Menu Items
                     ModernCard(
                       child: Column(
@@ -107,28 +115,33 @@ class _ProfilePageState extends State<ProfilePage> {
                             icon: Icons.local_shipping_outlined,
                             title: "My Orders",
                             subtitle: "Track your orders",
-                            onTap: () => Navigator.pushNamed(context, "/orders"),
+                            onTap: () =>
+                                Navigator.pushNamed(context, "/orders"),
                           ),
                           const Divider(height: 1),
                           _buildMenuItem(
                             icon: Icons.discount_outlined,
                             title: "Discount & Offers",
                             subtitle: "View available coupons",
-                            onTap: () => Navigator.pushNamed(context, "/discount"),
+                            onTap: () =>
+                                Navigator.pushNamed(context, "/discount"),
                           ),
                           const Divider(height: 1),
                           _buildMenuItem(
                             icon: Icons.support_agent,
                             title: "Help & Support",
                             subtitle: "Get help when you need it",
-                            onTap: () => SnackBarUtils.showInfo(context, "Mail us at ecommerce@shop.com"),
+                            onTap: () => SnackBarUtils.showInfo(
+                              context,
+                              "Mail us at ecommerce@shop.com",
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Logout
                     ModernCard(
                       child: ListTile(
@@ -154,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         subtitle: const Text("Sign out of your account"),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () => _showLogoutDialog(),
+                        onTap: _showLogoutDialog,
                       ),
                     ),
                   ],
@@ -162,12 +175,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ],
-          ),
         ),
       ),
     );
   }
 
+  /// Builds a reusable menu item
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
@@ -182,11 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
           color: Theme.of(context).primaryColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          icon,
-          color: Theme.of(context).primaryColor,
-          size: 20,
-        ),
+        child: Icon(icon, color: Theme.of(context).primaryColor, size: 20),
       ),
       title: Text(
         title,
@@ -197,24 +206,19 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          color: Colors.grey.shade600,
-          fontSize: 12,
-        ),
+        style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
       ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
     );
   }
-}
 
+  /// Logout dialog
   void _showLogoutDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text(
           "Logout",
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -228,14 +232,23 @@ class _ProfilePageState extends State<ProfilePage> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              
-              Provider.of<UserProvider>(context, listen: false).cancelProvider();
-              Provider.of<CartProvider>(context, listen: false).cancelProvider();
-              
+
+              // Reset providers
+              Provider.of<UserProvider>(
+                context,
+                listen: false,
+              ).cancelProvider();
+              Provider.of<CartProvider>(
+                context,
+                listen: false,
+              ).cancelProvider();
+
+              // Logout
               await AuthService().logout();
-              
+
               SnackBarUtils.showSuccess(context, "Logged out successfully");
-              
+
+              // Navigate to login
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 "/login",
@@ -252,3 +265,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}

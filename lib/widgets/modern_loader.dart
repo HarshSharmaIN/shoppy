@@ -4,11 +4,7 @@ class ModernLoader extends StatefulWidget {
   final double size;
   final Color? color;
 
-  const ModernLoader({
-    super.key,
-    this.size = 50,
-    this.color,
-  });
+  const ModernLoader({super.key, this.size = 50, this.color});
 
   @override
   State<ModernLoader> createState() => _ModernLoaderState();
@@ -60,11 +56,7 @@ class ModernShimmer extends StatefulWidget {
   final Widget child;
   final bool enabled;
 
-  const ModernShimmer({
-    super.key,
-    required this.child,
-    this.enabled = true,
-  });
+  const ModernShimmer({super.key, required this.child, this.enabled = true});
 
   @override
   State<ModernShimmer> createState() => _ModernShimmerState();
@@ -105,11 +97,7 @@ class _ModernShimmerState extends State<ModernShimmer>
             return LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: const [
-                Colors.grey,
-                Colors.white,
-                Colors.grey,
-              ],
+              colors: const [Colors.grey, Colors.white, Colors.grey],
               stops: [
                 _animation.value - 0.3,
                 _animation.value,

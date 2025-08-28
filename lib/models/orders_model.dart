@@ -21,7 +21,7 @@ class OrdersModel {
 
   factory OrdersModel.fromJson(Map<String, dynamic> json, String id) {
     return OrdersModel(
-      id: id ?? "",
+      id: id,
       created_at: json["created_at"] ?? 0,
       email: json["email"] ?? "",
       name: json["name"] ?? "",

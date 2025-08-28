@@ -6,11 +6,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.check_circle,
-              color: Colors.white,
-              size: 20,
-            ),
+            const Icon(Icons.check_circle, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -26,9 +22,7 @@ class SnackBarUtils {
         ),
         backgroundColor: Colors.green.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 3),
       ),
@@ -40,11 +34,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.error,
-              color: Colors.white,
-              size: 20,
-            ),
+            const Icon(Icons.error, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -60,9 +50,7 @@ class SnackBarUtils {
         ),
         backgroundColor: Colors.red.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 4),
       ),
@@ -74,11 +62,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.info,
-              color: Colors.white,
-              size: 20,
-            ),
+            const Icon(Icons.info, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -94,9 +78,7 @@ class SnackBarUtils {
         ),
         backgroundColor: Colors.blue.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 3),
       ),
@@ -108,11 +90,7 @@ class SnackBarUtils {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.warning,
-              color: Colors.white,
-              size: 20,
-            ),
+            const Icon(Icons.warning, color: Colors.white, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -128,9 +106,7 @@ class SnackBarUtils {
         ),
         backgroundColor: Colors.orange.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 3),
       ),

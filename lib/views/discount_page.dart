@@ -27,15 +27,16 @@ class _DiscountPageState extends State<DiscountPage> {
         stream: DbService().readDiscounts(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<CouponModel> discounts =
-                CouponModel.fromJsonList(snapshot.data!.docs)
-                    as List<CouponModel>;
+            List<CouponModel> discounts = CouponModel.fromJsonList(
+              snapshot.data!.docs,
+            );
 
             if (discounts.isEmpty) {
               return EmptyStateWidget(
                 icon: Icons.local_offer_outlined,
                 title: "No Coupons Available",
-                subtitle: "There are no discount coupons available at the moment. Check back later for great deals!",
+                subtitle:
+                    "There are no discount coupons available at the moment. Check back later for great deals!",
                 iconColor: Colors.blue,
               );
             } else {

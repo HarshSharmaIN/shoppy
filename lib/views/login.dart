@@ -1,36 +1,22 @@
+import 'package:ecommerce_app/controllers/auth_service.dart';
+import 'package:ecommerce_app/utils/snackbar_utils.dart';
+import 'package:ecommerce_app/widgets/modern_button.dart';
+import 'package:ecommerce_app/widgets/modern_text_field.dart';
 import 'package:flutter/material.dart';
 
-class IntroScreen extends StatefulWidget {
-  const IntroScreen({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<IntroScreen> createState() => _IntroScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _IntroScreenState extends State<IntroScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  final List<IntroPage> _pages = [
-    IntroPage(
-      title: "Discover Amazing Products",
-      description: "Browse through thousands of products from top brands and find exactly what you're looking for.",
-      icon: Icons.search,
-      color: Colors.blue,
-    ),
-    IntroPage(
-      title: "Secure & Fast Checkout",
-      description: "Shop with confidence using our secure payment system and enjoy fast delivery to your doorstep.",
-      icon: Icons.security,
-      color: Colors.green,
-    ),
-    IntroPage(
-      title: "Track Your Orders",
-      description: "Stay updated with real-time order tracking and get notified at every step of your delivery.",
-      icon: Icons.local_shipping,
-      color: Colors.orange,
-    ),
-  ];
+class _LoginPageState extends State<LoginPage> {
+  final formKey = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -41,203 +27,257 @@ class _IntroScreenState extends State<IntroScreen> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.grey.shade50,
-                Colors.white,
-              ],
+              colors: [Colors.grey.shade50, Colors.white],
             ),
           ),
-          child: Column(
-            children: [
-              // Skip button
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => _goToLogin(),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 40),
+
+                  // Header
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.shopping_bag,
+                            size: 40,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Text(
+                          "Welcome Back!",
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Sign in to continue shopping",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 48),
+
+                  // Email field
+                  ModernTextField(
+                    controller: _emailController,
+                    label: "Email",
+                    hint: "Enter your email address",
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Email cannot be empty";
+                      }
+                      if (!RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value)) {
+                        return "Please enter a valid email";
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Password field
+                  ModernTextField(
+                    controller: _passwordController,
+                    label: "Password",
+                    hint: "Enter your password",
+                    prefixIcon: Icons.lock_outline,
+                    suffixIcon: _obscurePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    obscureText: _obscurePassword,
+                    onSuffixTap: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Password cannot be empty";
+                      }
+                      if (value.length < 8) {
+                        return "Password should have at least 8 characters";
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Forgot password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => _showForgotPasswordDialog(),
                       child: Text(
-                        "Skip",
+                        "Forgot Password?",
                         style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              
-              // Page view
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  itemCount: _pages.length,
-                  itemBuilder: (context, index) {
-                    return _buildPage(_pages[index]);
-                  },
-                ),
-              ),
-              
-              // Page indicators
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _pages.length,
-                  (index) => _buildIndicator(index),
-                ),
-              ),
-              
-              const SizedBox(height: 40),
-              
-              // Navigation buttons
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    if (_currentPage > 0)
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            _pageController.previousPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text("Previous"),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Login button
+                  ModernButton(
+                    text: "Sign In",
+                    onPressed: _login,
+                    isLoading: _isLoading,
+                    width: double.infinity,
+                    icon: Icons.login,
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Sign up link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 16,
                         ),
                       ),
-                    if (_currentPage > 0) const SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_currentPage == _pages.length - 1) {
-                            _goToLogin();
-                          } else {
-                            _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, "/signup"),
                         child: Text(
-                          _currentPage == _pages.length - 1 
-                              ? "Get Started" 
-                              : "Next",
-                          style: const TextStyle(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
-              
-              const SizedBox(height: 40),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildPage(IntroPage page) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: page.color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(60),
+  void _login() async {
+    if (!formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await AuthService().loginWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
+
+      if (result == "Login Successful") {
+        SnackBarUtils.showSuccess(context, "Welcome back! Login successful");
+        Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+      } else {
+        SnackBarUtils.showError(context, result);
+      }
+    } catch (e) {
+      SnackBarUtils.showError(context, "An error occurred. Please try again.");
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showForgotPasswordDialog() {
+    final emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          "Reset Password",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Enter your email address to receive a password reset link.",
             ),
-            child: Icon(
-              page.icon,
-              size: 60,
-              color: page.color,
+            const SizedBox(height: 16),
+            ModernTextField(
+              controller: emailController,
+              label: "Email",
+              hint: "Enter your email",
+              prefixIcon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
             ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
           ),
-          const SizedBox(height: 40),
-          Text(
-            page.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+          ElevatedButton(
+            onPressed: () async {
+              if (emailController.text.isEmpty) {
+                SnackBarUtils.showError(context, "Email cannot be empty");
+                return;
+              }
+
+              Navigator.pop(context);
+
+              final result = await AuthService().resetPassword(
+                emailController.text.trim(),
+              );
+              if (result == "Mail Sent") {
+                SnackBarUtils.showSuccess(
+                  context,
+                  "Password reset link sent to your email",
+                );
+              } else {
+                SnackBarUtils.showError(context, result);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
             ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            page.description,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey.shade600,
-              height: 1.5,
-            ),
+            child: const Text("Send Link"),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildIndicator(int index) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: _currentPage == index ? 24 : 8,
-      height: 8,
-      decoration: BoxDecoration(
-        color: _currentPage == index 
-            ? Theme.of(context).primaryColor 
-            : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(4),
-      ),
-    );
-  }
-
-  void _goToLogin() {
-    Navigator.pushReplacementNamed(context, "/login");
-  }
-}
-
-class IntroPage {
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-
-  IntroPage({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-  });
 }

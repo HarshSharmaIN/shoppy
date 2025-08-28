@@ -15,7 +15,7 @@ class CouponModel {
 
   factory CouponModel.fromJson(Map<String, dynamic> json, String id) {
     return CouponModel(
-      id: id ?? "",
+      id: id,
       code: json["code"] ?? "",
       discount: json["discount"] ?? 0,
       desc: json["desc"] ?? "",

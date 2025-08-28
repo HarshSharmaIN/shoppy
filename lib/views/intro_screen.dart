@@ -14,19 +14,22 @@ class _IntroScreenState extends State<IntroScreen> {
   final List<IntroPage> _pages = [
     IntroPage(
       title: "Discover Amazing Products",
-      description: "Browse through thousands of products from top brands and find exactly what you're looking for.",
+      description:
+          "Browse through thousands of products from top brands and find exactly what you're looking for.",
       icon: Icons.search,
       color: Colors.blue,
     ),
     IntroPage(
       title: "Secure & Fast Checkout",
-      description: "Shop with confidence using our secure payment system and enjoy fast delivery to your doorstep.",
+      description:
+          "Shop with confidence using our secure payment system and enjoy fast delivery to your doorstep.",
       icon: Icons.security,
       color: Colors.green,
     ),
     IntroPage(
       title: "Track Your Orders",
-      description: "Stay updated with real-time order tracking and get notified at every step of your delivery.",
+      description:
+          "Stay updated with real-time order tracking and get notified at every step of your delivery.",
       icon: Icons.local_shipping,
       color: Colors.orange,
     ),
@@ -41,10 +44,7 @@ class _IntroScreenState extends State<IntroScreen> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.grey.shade50,
-                Colors.white,
-              ],
+              colors: [Colors.grey.shade50, Colors.white],
             ),
           ),
           child: Column(
@@ -69,7 +69,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   ],
                 ),
               ),
-              
+
               // Page view
               Expanded(
                 child: PageView.builder(
@@ -85,7 +85,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   },
                 ),
               ),
-              
+
               // Page indicators
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -94,9 +94,9 @@ class _IntroScreenState extends State<IntroScreen> {
                   (index) => _buildIndicator(index),
                 ),
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Navigation buttons
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -142,8 +142,8 @@ class _IntroScreenState extends State<IntroScreen> {
                           ),
                         ),
                         child: Text(
-                          _currentPage == _pages.length - 1 
-                              ? "Get Started" 
+                          _currentPage == _pages.length - 1
+                              ? "Get Started"
                               : "Next",
                           style: const TextStyle(
                             fontSize: 16,
@@ -155,7 +155,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 40),
             ],
           ),
@@ -177,11 +177,7 @@ class _IntroScreenState extends State<IntroScreen> {
               color: page.color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(60),
             ),
-            child: Icon(
-              page.icon,
-              size: 60,
-              color: page.color,
-            ),
+            child: Icon(page.icon, size: 60, color: page.color),
           ),
           const SizedBox(height: 40),
           Text(
@@ -215,8 +211,8 @@ class _IntroScreenState extends State<IntroScreen> {
       width: _currentPage == index ? 24 : 8,
       height: 8,
       decoration: BoxDecoration(
-        color: _currentPage == index 
-            ? Theme.of(context).primaryColor 
+        color: _currentPage == index
+            ? Theme.of(context).primaryColor
             : Colors.grey.shade300,
         borderRadius: BorderRadius.circular(4),
       ),
